@@ -4,11 +4,14 @@
   publish = "dist"
 
 [build.environment]
-  # Astro 7 richiede Node >= 22.12 (il default di Netlify è troppo vecchio)
-  NODE_VERSION = "22.12.0"
-  # Fix corepack "Cannot find matching keyid": le chiavi di firma incluse in
-  # corepack su Netlify sono troppo vecchie per verificare pnpm 11 → disabilita
-  # il controllo firma così corepack può installare pnpm.
+  # Node 22.x più recente: il corepack incluso in 22.12 è rotto
+  # (ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING). Astro 7 richiede Node >= 22.12.
+  NODE_VERSION = "22"
+  # Installa pnpm in modo standalone (senza il corepack rotto di Netlify):
+  # niente campo `packageManager` in package.json → corepack non viene invocato.
+  # Stessa versione del lockfile (la pnpm-workspace.yaml usa chiavi di pnpm 11).
+  PNPM_VERSION = "11.8.0"
+  # Safety net se Netlify usasse comunque corepack: salta il controllo firma.
   COREPACK_INTEGRITY_KEYS = "0"
 
 # Cache degli asset con hash (immutabili) generati da Astro
