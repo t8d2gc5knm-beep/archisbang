@@ -1,0 +1,422 @@
+---
+/**
+ * Navbar — floating (top 32px) → fixed with paper/80 backdrop-blur on scroll.
+ * Schede ispirate al sito originale: Progetti (con le 3 tipologie a tendina),
+ * Studio, Contatti, più Lavora con noi. Brand: Playfair ARCHISBANG fra due barre.
+ * Mobile: hamburger → overlay ink fullscreen con sotto-voci espanse.
+ */
+const navItems = [
+  {
+    label: 'Progetti',
+    href: '/progetti',
+    children: [
+      { label: 'Architettura Scolastica', href: '/progetti/architettura-scolastica' },
+      { label: 'Riqualificazioni', href: '/progetti/riqualificazioni' },
+      { label: 'Aziende e Spazi Smart', href: '/progetti/aziende-e-spazi-smart' },
+      { label: 'Tutti i progetti', href: '/progetti', divider: true },
+    ],
+  },
+  { label: 'Studio', href: '/studio' },
+  { label: 'Contatti', href: '#contatti' },
+];
+---
+
+<header class="navbar" id="navbar" data-scrolled="false">
+  <div class="navbar-inner container-7xl">
+    <a href="/" class="navbar-brand" aria-label="Archisbang — home">
+      <span class="brand-bar brand-bar--left" aria-hidden="true"></span>
+      <span class="brand-name">ARCHISBANG</span>
+      <span class="brand-bar brand-bar--right" aria-hidden="true"></span>
+    </a>
+
+    <nav class="navbar-links" aria-label="Navigazione principale">
+      {
+        navItems.map((item) =>
+          item.children ? (
+            <div class="nav-item nav-item--menu">
+              <a href={item.href} class="navbar-link" aria-haspopup="true">
+                {item.label}
+                <span class="nav-caret" aria-hidden="true">↓</span>
+              </a>
+              <div class="nav-dropdown">
+                <div class="nav-dropdown-inner">
+                  {item.children.map((c) => (
+                    <a
+                      href={c.href}
+                      class:list={['nav-dropdown-link', { 'nav-dropdown-link--all': c.divider }]}
+                    >
+                      {c.label}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div class="nav-item">
+              <a href={item.href} class="navbar-link">{item.label}</a>
+            </div>
+          )
+        )
+      }
+    </nav>
+
+    <button
+      type="button"
+      class="navbar-toggle"
+      id="navbar-toggle"
+      aria-label="Apri il menu"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+
+  <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+    <nav class="mobile-menu-links" aria-label="Navigazione mobile">
+      {
+        navItems.map((item) => (
+          <div class="mobile-group">
+            <a href={item.href} class="mobile-menu-link">{item.label}</a>
+            {item.children && (
+              <div class="mobile-sublinks">
+                {item.children.map((c) => (
+                  <a href={c.href} class="mobile-sublink">{c.label}</a>
+                ))}
+              </div>
+            )}
+          </div>
+        ))
+      }
+    </nav>
+  </div>
+</header>
+
+<style>
+  .navbar {
+    position: fixed;
+    top: 32px;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    border-bottom: 1px solid transparent;
+    transition:
+      top var(--duration-base) var(--ease-editorial),
+      padding var(--duration-base) var(--ease-editorial),
+      background var(--duration-base) var(--ease-editorial),
+      border-color var(--duration-base) var(--ease-editorial);
+  }
+
+  .navbar[data-scrolled='true'] {
+    top: 0;
+    padding-block: 16px;
+    background: color-mix(in srgb, var(--color-paper) 80%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom-color: var(--color-line);
+  }
+
+  .navbar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  /* Brand */
+  .navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .brand-name {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+  }
+  .brand-bar {
+    height: 1px;
+    background: var(--color-ink);
+  }
+  .brand-bar--left {
+    width: 24px;
+  }
+  .brand-bar--right {
+    width: 32px;
+  }
+
+  /* Desktop links */
+  .navbar-links {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+  .nav-item {
+    position: relative;
+  }
+  .navbar-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding-block: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: var(--tracking-ui-emphasis);
+    text-transform: uppercase;
+    color: var(--color-ink);
+    transition: color var(--duration-fast) var(--ease-editorial);
+  }
+  .navbar-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--color-rebar);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--duration-fast) var(--ease-editorial);
+  }
+  .nav-item:hover .navbar-link,
+  .nav-item:focus-within .navbar-link {
+    color: var(--color-rebar);
+  }
+  .nav-item:hover .navbar-link::after,
+  .nav-item:focus-within .navbar-link::after {
+    transform: scaleX(1);
+  }
+  .nav-caret {
+    font-size: 0.5rem;
+    transition: transform var(--duration-fast) var(--ease-editorial);
+  }
+  .nav-item--menu:hover .nav-caret,
+  .nav-item--menu:focus-within .nav-caret {
+    transform: translateY(2px);
+  }
+
+  /* Dropdown */
+  .nav-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    padding-top: 16px; /* invisible bridge so hover doesn't drop */
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+      opacity var(--duration-fast) var(--ease-editorial),
+      transform var(--duration-fast) var(--ease-editorial),
+      visibility var(--duration-fast) var(--ease-editorial);
+  }
+  .nav-item--menu:hover .nav-dropdown,
+  .nav-item--menu:focus-within .nav-dropdown {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+  }
+  .nav-dropdown-inner {
+    display: flex;
+    flex-direction: column;
+    min-width: 260px;
+    padding: 10px;
+    background: var(--color-paper);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-max);
+  }
+  .nav-dropdown-link {
+    padding: 11px 14px;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: var(--tracking-ui);
+    text-transform: uppercase;
+    color: var(--color-ink);
+    transition:
+      color var(--duration-fast) var(--ease-editorial),
+      background var(--duration-fast) var(--ease-editorial);
+  }
+  .nav-dropdown-link:hover {
+    color: var(--color-rebar);
+    background: var(--color-bone);
+  }
+  .nav-dropdown-link--all {
+    margin-top: 6px;
+    border-top: 1px solid var(--color-line);
+    color: var(--color-concrete);
+  }
+
+  /* Hamburger */
+  .navbar-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+  }
+  .navbar-toggle span {
+    display: block;
+    width: 24px;
+    height: 1px;
+    background: var(--color-ink);
+    transition:
+      transform var(--duration-fast) var(--ease-editorial),
+      opacity var(--duration-fast) var(--ease-editorial);
+  }
+  .navbar.menu-open .navbar-toggle span {
+    background: var(--color-paper);
+  }
+  .navbar.menu-open .navbar-toggle span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+  .navbar.menu-open .navbar-toggle span:nth-child(2) {
+    opacity: 0;
+  }
+  .navbar.menu-open .navbar-toggle span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  /* Mobile overlay */
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 96px 32px 48px;
+    background: var(--color-ink);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    overflow-y: auto;
+    transition:
+      opacity var(--duration-base) var(--ease-editorial),
+      visibility var(--duration-base) var(--ease-editorial);
+  }
+  .navbar.menu-open .mobile-menu {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+  .mobile-menu-links {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    width: 100%;
+    max-width: 360px;
+    text-align: center;
+  }
+  .mobile-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .mobile-menu-link {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    font-weight: 400;
+    color: var(--color-paper);
+    transition: color var(--duration-fast) var(--ease-editorial);
+  }
+  .mobile-menu-link:hover {
+    color: var(--color-rebar);
+  }
+  .mobile-sublinks {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 4px;
+  }
+  .mobile-sublink {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: var(--tracking-ui);
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-paper) 64%, transparent);
+    transition: color var(--duration-fast) var(--ease-editorial);
+  }
+  .mobile-sublink:hover {
+    color: var(--color-rebar);
+  }
+
+  @media (max-width: 900px) {
+    .navbar-links {
+      display: none;
+    }
+    .navbar-toggle {
+      display: flex;
+    }
+  }
+</style>
+
+<script>
+  // Scroll + keyboard listeners bound once to window; they re-query the
+  // navbar each time so they stay valid across view-transition swaps.
+  function bindGlobalNavListeners() {
+    if ((window as any).__navGlobalsBound) return;
+    (window as any).__navGlobalsBound = true;
+
+    const syncScrolled = () => {
+      const nav = document.getElementById('navbar');
+      if (nav) nav.dataset.scrolled = window.scrollY > 8 ? 'true' : 'false';
+    };
+    window.addEventListener('scroll', syncScrolled, { passive: true });
+
+    window.addEventListener('keydown', (e) => {
+      const nav = document.getElementById('navbar');
+      if (e.key === 'Escape' && nav?.classList.contains('menu-open')) {
+        closeMenu(nav);
+      }
+    });
+  }
+
+  function closeMenu(navbar: HTMLElement) {
+    const toggle = document.getElementById('navbar-toggle');
+    navbar.classList.remove('menu-open');
+    toggle?.setAttribute('aria-expanded', 'false');
+    toggle?.setAttribute('aria-label', 'Apri il menu');
+    document.getElementById('mobile-menu')?.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  function setupNavbar() {
+    const navbar = document.getElementById('navbar');
+    const toggle = document.getElementById('navbar-toggle');
+    const menu = document.getElementById('mobile-menu');
+    if (!navbar || !toggle || !menu) return;
+
+    navbar.dataset.scrolled = window.scrollY > 8 ? 'true' : 'false';
+
+    const setOpen = (open: boolean) => {
+      navbar.classList.toggle('menu-open', open);
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'Chiudi il menu' : 'Apri il menu');
+      menu.setAttribute('aria-hidden', String(!open));
+      document.body.style.overflow = open ? 'hidden' : '';
+    };
+
+    toggle.addEventListener('click', () => {
+      setOpen(!navbar.classList.contains('menu-open'));
+    });
+
+    menu.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => setOpen(false));
+    });
+  }
+
+  bindGlobalNavListeners();
+  setupNavbar();
+  document.addEventListener('astro:after-swap', setupNavbar);
+</script>

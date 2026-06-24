@@ -1,0 +1,18 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectsListing from '../../components/sections/ProjectsListing.astro';
+import { projects } from '../../lib/projects';
+---
+
+<BaseLayout
+  title="Progetti — Archisbang"
+  description="Il portfolio di Archisbang: architettura scolastica, riqualificazioni e spazi aziendali. Scuole, recuperi e workplace che generano comunità."
+>
+  <ProjectsListing
+    heading="Progetti"
+    blurb="Scuole, riqualificazioni e spazi del lavoro: una selezione di opere realizzate e proposte di concorso."
+    items={projects}
+    activeSlug={null}
+    total={projects.length}
+  />
+</BaseLayout>

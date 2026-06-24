@@ -1,0 +1,376 @@
+@import "tailwindcss";
+@import "./fonts.css";
+
+/* ============================================================
+   DESIGN TOKENS — palette del sito originale
+   Teal/petrolio scuro come colore principale (Wix color_20 ≈ #004949),
+   su bianco, con un teal più acceso come accento.
+   ============================================================ */
+@theme {
+  /* === Palette === */
+  --color-ink: #004a47; /* TEAL principale — heading, footer, bottoni, nav */
+  --color-paper: #ffffff; /* bianco — background primario */
+  --color-bone: #eef2f1; /* grigio chiarissimo (tono teal) — background 2° */
+  --color-graphite: #1b2e2c; /* charcoal teal — body text */
+  --color-concrete: #5f736f; /* grigio-teal — testo secondario */
+  --color-rebar: #0a756d; /* TEAL acceso — accento (dot, righe, hover) */
+  --color-line: #dce3e1; /* grigio-teal chiaro — bordi e divisori 1px */
+  --color-danger: #b00020; /* solo error states */
+
+  /* === Typography triad === */
+  --font-display: "Playfair Display", Georgia, "Times New Roman", serif;
+  --font-text: "Space Grotesk Variable", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: "Space Mono", "SF Mono", "Courier New", monospace;
+
+  /* === Editorial easing + durations (site signature) === */
+  --ease-editorial: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-slide: cubic-bezier(0.8, 0, 0.2, 1);
+  --duration-fast: 240ms;
+  --duration-base: 700ms;
+  --duration-slow: 1000ms;
+
+  /* === Tracking (Space Mono labels) === */
+  --tracking-ui: 0.2em;
+  --tracking-ui-emphasis: 0.3em;
+  --tracking-ui-hover: 0.4em;
+  --tracking-display: -0.02em;
+
+  /* === Layout === */
+  --container-max: 80rem;
+  --grid-size: 40px;
+}
+
+/* Composite / non-utility tokens (kept out of @theme on purpose) */
+:root {
+  --color-grid: rgba(0, 74, 71, 0.06);
+  --border-hairline: 1px solid var(--color-line);
+  --radius-max: 2px;
+  --text-h1-massive: clamp(2.25rem, 6vw, 5rem); /* capped so the hero fits one screen */
+  --text-h2-display: clamp(2.25rem, 5vw, 4rem);
+  --text-h3: clamp(1.5rem, 2.5vw, 2.25rem);
+  --section-padding-y: 8rem;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    background: var(--color-paper);
+    color: var(--color-graphite);
+    font-family: var(--font-text);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-size: 1rem;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: var(--tracking-display);
+    color: var(--color-ink);
+  }
+
+  p {
+    margin: 0;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+
+  button {
+    font-family: inherit;
+  }
+
+  ::selection {
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 4px;
+  }
+}
+
+/* ============================================================
+   COMPONENTS — reusable design-system primitives
+   ============================================================ */
+@layer components {
+  /* --- Layout --- */
+  .container-7xl {
+    position: relative;
+    z-index: 1;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: 2rem;
+  }
+
+  /* --- Accessibility: skip link --- */
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: 100;
+    padding: 12px 20px;
+    background: var(--color-ink);
+    color: var(--color-paper);
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: var(--tracking-ui);
+    text-transform: uppercase;
+  }
+  .skip-link:focus {
+    left: 0;
+  }
+
+  /* --- Typography primitives --- */
+  .label-mono {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    font-weight: 400;
+    letter-spacing: var(--tracking-ui-emphasis);
+    text-transform: uppercase;
+    color: var(--color-concrete);
+  }
+
+  .metadata-mono {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: var(--tracking-ui);
+    text-transform: uppercase;
+    color: var(--color-ink);
+  }
+
+  .h1-hero {
+    font-family: var(--font-display);
+    font-weight: 400; /* Playfair's lightest available weight */
+    font-size: var(--text-h1-massive);
+    line-height: 0.95;
+    letter-spacing: var(--tracking-display);
+    text-transform: uppercase;
+    color: var(--color-ink);
+  }
+  .h1-hero em,
+  .h1-hero .accent {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--color-concrete);
+  }
+
+  .h2 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: var(--text-h2-display);
+    line-height: 1.05;
+    letter-spacing: var(--tracking-display);
+    color: var(--color-ink);
+  }
+
+  /* --- Background grid (fixed layer) --- */
+  .bg-grid {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .bg-grid .grid-pattern {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, var(--color-grid) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--color-grid) 1px, transparent 1px);
+    background-size: var(--grid-size) var(--grid-size);
+    -webkit-mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.4) 0%, transparent 70%);
+    mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.4) 0%, transparent 70%);
+  }
+
+  /* --- Pulse dot --- */
+  .pulse-dot {
+    flex-shrink: 0;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-rebar);
+    animation: pulse-dot 2.4s var(--ease-editorial) infinite;
+  }
+
+  /* --- Scan-line progress --- */
+  .scan-line {
+    position: relative;
+    height: 2px;
+    width: 100%;
+    overflow: hidden;
+    background: var(--color-line);
+  }
+  .scan-line-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 40%;
+    background: var(--color-rebar);
+    animation: scan-slide 2s var(--ease-slide) infinite;
+  }
+
+  /* --- Primary animated CTA --- */
+  .cta-primary {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    padding: 20px 40px;
+    border: none;
+    border-radius: var(--radius-max);
+    background: var(--color-ink);
+    color: var(--color-paper);
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: letter-spacing var(--duration-base) var(--ease-editorial);
+  }
+  .cta-primary .cta-label {
+    position: relative;
+    z-index: 2;
+  }
+  .cta-primary .cta-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(100%);
+    transition: transform var(--duration-base) var(--ease-editorial);
+  }
+  .cta-primary:hover {
+    letter-spacing: var(--tracking-ui-hover);
+  }
+  .cta-primary:hover .cta-overlay {
+    transform: translateY(0);
+  }
+
+  /* --- Low-intent underline CTA --- */
+  .cta-link-underline {
+    display: inline-block;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--color-ink);
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: var(--tracking-ui-emphasis);
+    text-transform: uppercase;
+    color: var(--color-ink);
+    transition:
+      color var(--duration-fast) var(--ease-editorial),
+      border-color var(--duration-fast) var(--ease-editorial),
+      letter-spacing var(--duration-fast) var(--ease-editorial);
+  }
+  .cta-link-underline:hover {
+    color: var(--color-rebar);
+    border-bottom-color: var(--color-rebar);
+    letter-spacing: var(--tracking-ui-hover);
+  }
+
+  /* --- Section rhythm --- */
+  .section {
+    position: relative;
+    z-index: 1;
+    padding-block: clamp(4.5rem, 9vw, 8rem);
+  }
+
+  .section-head {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    max-width: 52rem;
+    margin-bottom: clamp(2.5rem, 5vw, 4rem);
+  }
+  .section-head .h2 {
+    max-width: 18ch;
+  }
+  .section-head p {
+    max-width: 46ch;
+    font-size: 1.0625rem;
+    color: var(--color-concrete);
+  }
+
+  /* --- Eyebrow (mono label with a leading rule) --- */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: var(--tracking-ui-emphasis);
+    text-transform: uppercase;
+    color: var(--color-concrete);
+  }
+  .eyebrow::before {
+    content: '';
+    width: 32px;
+    height: 1px;
+    background: var(--color-rebar);
+  }
+}
+
+/* ============================================================
+   KEYFRAMES (unlayered — names prefixed to avoid Tailwind v4
+   reserved-keyframe collisions: pulse/spin/ping/bounce)
+   ============================================================ */
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(1.4);
+  }
+}
+
+@keyframes scan-slide {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(250%);
+  }
+}
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

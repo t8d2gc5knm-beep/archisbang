@@ -1,0 +1,86 @@
+---
+import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+import IntroLoader from '../components/layout/IntroLoader.astro';
+import BackgroundGrid from '../components/layout/BackgroundGrid.astro';
+import Navbar from '../components/layout/Navbar.astro';
+import Footer from '../components/layout/Footer.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Archisbang — Studio di Architettura · Torino',
+  description = 'Studio di architettura torinese dal 2008. Progettiamo edifici scolastici innovativi, riqualificazioni architettoniche ed energetiche e spazi smart per aziende.',
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
+---
+
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="it_IT" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="generator" content={Astro.generator} />
+    <ClientRouter />
+  </head>
+  <body>
+    <IntroLoader />
+    <a href="#main" class="skip-link">Salta al contenuto</a>
+    <BackgroundGrid />
+    <Navbar />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+
+    <script>
+      import { initLenis } from '../lib/lenis';
+      // Single Lenis instance for the lifetime of the document.
+      if (!(window as any).__lenis) {
+        (window as any).__lenis = initLenis() ?? true;
+      }
+
+      // Smooth-scroll in-page anchors (e.g. nav "Contatti" → footer), with a
+      // small offset for the fixed navbar. Bound once via event delegation so
+      // it survives view-transition swaps.
+      if (!(window as any).__anchorScrollBound) {
+        (window as any).__anchorScrollBound = true;
+        document.addEventListener('click', (e) => {
+          const link = (e.target as Element)?.closest?.('a[href^="#"]');
+          if (!link) return;
+          const hash = link.getAttribute('href');
+          if (!hash || hash === '#') return;
+          const target = document.querySelector(hash);
+          if (!target) return;
+          e.preventDefault();
+          const lenis = (window as any).__lenis;
+          // "Contatti" → vai in fondo alla pagina (footer + barra legale);
+          // gli altri anchor si fermano sotto la navbar fissa.
+          const toBottom = hash === '#contatti';
+          const max = document.documentElement.scrollHeight;
+          if (lenis && typeof lenis.scrollTo === 'function') {
+            lenis.scrollTo(toBottom ? max : target, { offset: toBottom ? 0 : -80 });
+          } else if (toBottom) {
+            window.scrollTo({ top: max, behavior: 'smooth' });
+          } else {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+          history.replaceState(null, '', hash);
+        });
+      }
+    </script>
+  </body>
+</html>

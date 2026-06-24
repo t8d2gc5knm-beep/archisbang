@@ -1,0 +1,244 @@
+---
+/**
+ * IntroLoader — "tavolo da disegno del geometra".
+ * Survey crosshair + righello con tacche tracciati a china, le due barre del
+ * logo crescono, ARCHISBANG si rivela con un wipe, le coordinate di Torino
+ * appaiono, poi il velo paper si solleva. Parte una sola volta per documento
+ * (flag in memoria, niente storage) e rispetta prefers-reduced-motion.
+ */
+---
+
+<div class="intro" id="intro" aria-hidden="true">
+  <span class="crop crop--tl"></span>
+  <span class="crop crop--tr"></span>
+  <span class="crop crop--bl"></span>
+  <span class="crop crop--br"></span>
+
+  <div class="intro-stage">
+    <svg
+      class="intro-draw"
+      viewBox="0 0 240 130"
+      fill="none"
+      stroke-linecap="square"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <!-- survey crosshair -->
+      <circle class="d d-circle" pathLength="1" cx="120" cy="42" r="17" />
+      <path class="d d-cross" pathLength="1" d="M120 17 V67 M95 42 H145" />
+      <circle class="dot" cx="120" cy="42" r="1.8" />
+      <!-- righello / baseline + tacche -->
+      <path class="d d-base" pathLength="1" d="M28 96 H212" />
+      <path
+        class="d d-ticks"
+        pathLength="1"
+        d="M44 96 v-7 M68 96 v-11 M92 96 v-7 M120 96 v-15 M148 96 v-7 M172 96 v-11 M196 96 v-7"
+      />
+    </svg>
+
+    <div class="intro-brandline">
+      <span class="intro-bar intro-bar--l"></span>
+      <span class="intro-brand">ARCHISBANG</span>
+      <span class="intro-bar intro-bar--r"></span>
+    </div>
+
+    <span class="intro-coords">45°04′ N · 07°41′ E — Torino</span>
+  </div>
+</div>
+
+<style>
+  .intro {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: grid;
+    place-items: center;
+    background: var(--color-paper);
+    animation: intro-veil 2.6s var(--ease-editorial) forwards;
+  }
+  @keyframes intro-veil {
+    0%,
+    76% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(-100%);
+    }
+  }
+
+  .intro-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+
+  /* Survey / ruler drawing */
+  .intro-draw {
+    width: clamp(220px, 30vw, 300px);
+    height: auto;
+    overflow: visible;
+  }
+  .d {
+    stroke: var(--color-ink);
+    stroke-width: 1.25;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+  .d-circle {
+    animation: intro-draw 0.75s var(--ease-editorial) 0.35s forwards;
+  }
+  .d-cross {
+    animation: intro-draw 0.55s var(--ease-editorial) 0.6s forwards;
+  }
+  .d-base {
+    animation: intro-draw 0.7s var(--ease-editorial) 0.2s forwards;
+  }
+  .d-ticks {
+    animation: intro-draw 0.6s var(--ease-editorial) 0.55s forwards;
+  }
+  @keyframes intro-draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  .dot {
+    fill: var(--color-rebar);
+    opacity: 0;
+    animation: intro-appear 0.4s var(--ease-editorial) 1s forwards;
+  }
+  @keyframes intro-appear {
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* Brand line with growing ruler bars + wipe reveal */
+  .intro-brandline {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .intro-bar {
+    width: 0;
+    height: 1px;
+    background: var(--color-ink);
+  }
+  .intro-bar--l {
+    animation: intro-bar 0.6s var(--ease-editorial) 0.95s forwards;
+  }
+  .intro-bar--r {
+    animation: intro-bar 0.6s var(--ease-editorial) 1.05s forwards;
+  }
+  @keyframes intro-bar {
+    to {
+      width: clamp(28px, 5vw, 56px);
+    }
+  }
+  .intro-brand {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(1.6rem, 4.4vw, 2.5rem);
+    letter-spacing: 0.06em;
+    color: var(--color-ink);
+    clip-path: inset(0 100% 0 0);
+    animation: intro-wipe 0.85s var(--ease-editorial) 0.9s forwards;
+  }
+  @keyframes intro-wipe {
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+
+  .intro-coords {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--color-concrete);
+    opacity: 0;
+    animation: intro-fade-up 0.6s var(--ease-editorial) 1.35s forwards;
+  }
+  @keyframes intro-fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Corner registration marks */
+  .crop {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    opacity: 0;
+    animation: intro-appear 0.5s var(--ease-editorial) 0.15s forwards;
+  }
+  .crop::before,
+  .crop::after {
+    content: '';
+    position: absolute;
+    background: var(--color-line);
+  }
+  .crop::before {
+    top: 8px;
+    left: 0;
+    width: 18px;
+    height: 1px;
+  }
+  .crop::after {
+    top: 0;
+    left: 8px;
+    width: 1px;
+    height: 18px;
+  }
+  .crop--tl {
+    top: 28px;
+    left: 28px;
+  }
+  .crop--tr {
+    top: 28px;
+    right: 28px;
+  }
+  .crop--bl {
+    bottom: 28px;
+    left: 28px;
+  }
+  .crop--br {
+    bottom: 28px;
+    right: 28px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .intro {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  function handleIntro() {
+    const intro = document.getElementById('intro');
+    if (!intro) return;
+
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // Replay only on a fresh document load, never on client-side navigations.
+    if (reduce || (window as any).__introPlayed) {
+      intro.remove();
+      return;
+    }
+    (window as any).__introPlayed = true;
+
+    const remove = () => intro.remove();
+    intro.addEventListener('animationend', (e) => {
+      if (e.target === intro) remove(); // the veil-lift animation finished
+    });
+    setTimeout(remove, 3200); // safety net
+  }
+
+  document.addEventListener('astro:page-load', handleIntro);
+</script>

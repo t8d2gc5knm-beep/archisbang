@@ -1,0 +1,87 @@
+---
+import { School, Recycle, Building2 } from '@lucide/astro';
+import ServiceCard from '../ui/ServiceCard.astro';
+
+/**
+ * Services — "Cosa facciamo": three typology cards.
+ */
+const services = [
+  {
+    index: '01',
+    Icon: School,
+    eyebrow: '01 — Tipologia',
+    title: 'Architettura Scolastica',
+    description:
+      'Edifici scolastici innovativi di ogni ordine e grado: ambienti flessibili, apertura extrascolastica e sostenibilità energetica nZEB.',
+    href: '/progetti/architettura-scolastica',
+    image: '/images/categories/scolastica.jpg',
+    imageAlt: 'Edificio scolastico progettato da Archisbang',
+  },
+  {
+    index: '02',
+    Icon: Recycle,
+    eyebrow: '02 — Tipologia',
+    title: 'Riqualificazioni',
+    description:
+      'Rigenerazione architettonica ed energetica del costruito: restyling, efficientamento e nuova vita per spazi esistenti.',
+    href: '/progetti/riqualificazioni',
+    image: '/images/categories/riqualificazioni.jpg',
+    imageAlt: 'Intervento di riqualificazione architettonica di Archisbang',
+  },
+  {
+    index: '03',
+    Icon: Building2,
+    eyebrow: '03 — Tipologia',
+    title: 'Spazi Aziendali',
+    description:
+      'Spazi di lavoro smart che raccontano il brand: flessibilità, benessere e identità per uffici e ambienti produttivi.',
+    href: '/progetti/aziende-e-spazi-smart',
+    image: '/images/categories/aziende.jpg',
+    imageAlt: 'Spazio aziendale progettato da Archisbang',
+  },
+];
+---
+
+<section class="section services-section" id="servizi" aria-labelledby="services-title">
+  <div class="container-7xl">
+    <div class="section-head">
+      <span class="eyebrow">Cosa facciamo</span>
+      <h2 class="h2" id="services-title">Tre territori di progetto, un solo metodo</h2>
+      <p>
+        Dall'edilizia scolastica alla rigenerazione del costruito fino agli
+        spazi del lavoro: progettiamo luoghi che generano comunità.
+      </p>
+    </div>
+
+    <div class="services-grid">
+      {
+        services.map(({ Icon, ...s }) => (
+          <ServiceCard {...s}>
+            <Icon size={22} strokeWidth={1.5} />
+          </ServiceCard>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Warm `bone` block + hairlines sets this section apart from its neighbours. */
+  .services-section {
+    background: var(--color-bone);
+    border-block: 1px solid var(--color-line);
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  @media (max-width: 900px) {
+    .services-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+  }
+</style>

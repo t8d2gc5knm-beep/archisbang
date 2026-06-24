@@ -1,0 +1,156 @@
+---
+/**
+ * ProjectCard — editorial project tile with a real photo (grayscale →
+ * colour on hover). Falls back to a graphite placeholder plate if no image.
+ * `span`: 'full' (16/9, full width) or 'half' (4/5).
+ */
+interface Props {
+  index: string;
+  eyebrow: string;
+  title: string;
+  meta: string;
+  href: string;
+  span?: 'full' | 'half';
+  image?: string;
+  imageAlt?: string;
+}
+
+const {
+  index,
+  eyebrow,
+  title,
+  meta,
+  href,
+  span = 'half',
+  image,
+  imageAlt = '',
+} = Astro.props;
+---
+
+<article class={`project-card project-card--${span}`}>
+  <a href={href} class="project-link">
+    <div class="project-media">
+      {
+        image ? (
+          <img class="project-photo" src={image} alt={imageAlt} loading="lazy" decoding="async" />
+        ) : (
+          <div class="project-plate" aria-hidden="true">
+            <span class="project-watermark">{index}</span>
+          </div>
+        )
+      }
+    </div>
+    <div class="project-overlay" aria-hidden="true"></div>
+    <div class="project-content">
+      <span class="project-eyebrow">{eyebrow}</span>
+      <h3 class="project-title">{title}</h3>
+      <span class="project-meta">{meta}</span>
+    </div>
+  </a>
+</article>
+
+<style>
+  .project-card {
+    position: relative;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-max);
+    overflow: hidden;
+    background: var(--color-ink);
+    transition:
+      transform var(--duration-base) var(--ease-editorial),
+      border-color var(--duration-base) var(--ease-editorial);
+  }
+  .project-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--color-ink);
+  }
+  .project-card--full {
+    grid-column: 1 / -1;
+    aspect-ratio: 16 / 9;
+  }
+  .project-card--half {
+    aspect-ratio: 4 / 5;
+  }
+
+  .project-link {
+    position: absolute;
+    inset: 0;
+    display: block;
+  }
+
+  .project-media {
+    position: absolute;
+    inset: 0;
+  }
+
+  .project-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(100%) contrast(1.02);
+    transition:
+      transform var(--duration-slow) var(--ease-editorial),
+      filter var(--duration-slow) var(--ease-editorial);
+  }
+  .project-card:hover .project-photo {
+    transform: scale(1.04);
+    filter: grayscale(0%) contrast(1);
+  }
+
+  /* Placeholder plate (used only when no image is supplied) */
+  .project-plate {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: radial-gradient(120% 120% at 30% 20%, #353535 0%, #1d1d1d 55%, #111111 100%);
+  }
+  .project-watermark {
+    font-family: var(--font-display);
+    font-size: clamp(5rem, 14vw, 11rem);
+    line-height: 1;
+    color: rgba(245, 242, 236, 0.06);
+    user-select: none;
+  }
+
+  .project-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 40%, rgba(10, 10, 10, 0.72) 100%);
+  }
+
+  .project-content {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: clamp(20px, 3vw, 32px);
+  }
+  .project-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: var(--tracking-ui-emphasis);
+    text-transform: uppercase;
+    color: var(--color-rebar);
+  }
+  .project-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.375rem, 3vw, 2.25rem);
+    font-weight: 400;
+    line-height: 1.05;
+    color: var(--color-paper);
+    transition: letter-spacing var(--duration-base) var(--ease-editorial);
+  }
+  .project-card:hover .project-title {
+    letter-spacing: 0.02em;
+  }
+  .project-meta {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: var(--tracking-ui);
+    text-transform: uppercase;
+    color: rgba(245, 242, 236, 0.78);
+  }
+</style>

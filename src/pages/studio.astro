@@ -1,0 +1,246 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { User } from '@lucide/astro';
+
+/**
+ * /studio — Chi siamo.
+ * 1) Descrizione dello studio  2) I fondatori  3) Il team / collaboratori
+ *
+ * Testi e nomi sono REALI (fonte: sito originale + stampa di settore).
+ * Archisbang è una partnership: 3 soci fondatori, non un singolo CEO.
+ * Le FOTO restano placeholder, da sostituire con i ritratti reali.
+ */
+
+// Soci fondatori (dal 2008)
+const founders = [
+  { name: 'Silvia Minutolo', role: 'Socia fondatrice · Architetta' },
+  { name: 'Alberto Perino', role: 'Socio fondatore · Architetto' },
+  { name: 'Marco Giai Via', role: 'Socio fondatore · Architetto' },
+];
+
+// Team / collaboratori — i Junior Partner sono reali; le altre voci sono
+// placeholder da compilare.
+const team = [
+  { name: 'Eugenio Chironna', role: 'Junior Partner · Architetto', placeholder: false },
+  { name: 'Gueorgui Djarov', role: 'Junior Partner · Architetto', placeholder: false },
+  { name: 'Nome Cognome', role: 'Collaboratore', placeholder: true },
+  { name: 'Nome Cognome', role: 'Collaboratrice', placeholder: true },
+];
+---
+
+<BaseLayout
+  title="Studio — Archisbang"
+  description="Archisbang, studio di architettura nato a Torino nel 2008: scuole, riqualificazioni e spazi smart. Chi siamo, i fondatori e il team."
+>
+  <!-- 1 · DESCRIZIONE STUDIO -->
+  <section class="studio-intro section">
+    <div class="container-7xl">
+      <span class="eyebrow">Studio · Torino · dal 2008</span>
+      <h1 class="studio-h1">Un laboratorio di architettura per il territorio</h1>
+      <div class="studio-intro-body">
+        <p>
+          Archisbang nasce a Torino nel 2008 come <em>Archisbang Lab</em>,
+          dall'incontro di un gruppo di architetti formatisi al Politecnico di
+          Torino. Da allora lo studio progetta edifici scolastici innovativi,
+          riqualificazioni architettoniche ed energetiche e spazi di lavoro
+          intelligenti per le aziende.
+        </p>
+        <p>
+          Crediamo nell'architettura come strumento di rigenerazione del
+          territorio: luoghi che diventano realtà vitali per le comunità che li
+          abitano. Lo studio è in viaggio — per condividere l'avventura servono
+          determinazione, entusiasmo e visione.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 · FONDATORI -->
+  <section class="founders section">
+    <div class="container-7xl">
+      <div class="section-head">
+        <span class="eyebrow">I fondatori</span>
+        <h2 class="h2">Il progetto nasce nel 2008</h2>
+        <p>
+          Lo studio è il risultato del lavoro di Silvia Minutolo, Alberto Perino
+          e Marco Giai Via, che dal 2008 investono competenze, energie
+          intellettuali e passione nel progetto Archisbang.
+        </p>
+      </div>
+
+      <div class="founders-grid">
+        {
+          founders.map((f) => (
+            <figure class="person person--lg">
+              <div class="portrait portrait--lg">
+                <User size={38} strokeWidth={1.25} />
+                <span class="portrait-label">Foto</span>
+              </div>
+              <figcaption class="person-caption">
+                <span class="person-name">{f.name}</span>
+                <span class="person-role">{f.role}</span>
+              </figcaption>
+            </figure>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · TEAM -->
+  <section class="team section">
+    <div class="container-7xl">
+      <div class="section-head">
+        <span class="eyebrow">Team</span>
+        <h2 class="h2">I collaboratori</h2>
+        <p>
+          Attorno ai fondatori lavora un gruppo affiatato di architetti e
+          collaboratori. La squadra è al completo, eppure c'è sempre spazio per
+          la persona giusta.
+        </p>
+      </div>
+
+      <div class="team-grid">
+        {
+          team.map((m) => (
+            <figure class:list={['person', { 'person--ph': m.placeholder }]}>
+              <div class="portrait">
+                <User size={30} strokeWidth={1.25} />
+                <span class="portrait-label">Foto</span>
+              </div>
+              <figcaption class="person-caption">
+                <span class="person-name">{m.name}</span>
+                <span class="person-role">{m.role}</span>
+              </figcaption>
+            </figure>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* Portrait placeholders (swap for <img> when ritratti are ready) */
+  .portrait {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    aspect-ratio: 4 / 5;
+    border: 1px dashed var(--color-line);
+    border-radius: var(--radius-max);
+    background: var(--color-bone);
+    color: var(--color-concrete);
+  }
+  .portrait-label {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: var(--tracking-ui);
+    text-transform: uppercase;
+    color: var(--color-concrete);
+  }
+
+  .person {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin: 0;
+  }
+  .person--ph {
+    opacity: 0.7;
+  }
+  .person-caption {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .person-name {
+    font-family: var(--font-display);
+    font-weight: 400;
+    color: var(--color-ink);
+  }
+  .person--lg .person-name {
+    font-size: 1.5rem;
+  }
+  .person:not(.person--lg) .person-name {
+    font-size: 1.25rem;
+  }
+  .person-role {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: var(--tracking-ui-emphasis);
+    text-transform: uppercase;
+    color: var(--color-concrete);
+  }
+
+  /* 1 · Studio intro */
+  .studio-intro {
+    padding-top: clamp(140px, 18vh, 200px);
+  }
+  .studio-intro .eyebrow {
+    margin-bottom: 22px;
+  }
+  .studio-h1 {
+    max-width: 18ch;
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    line-height: 1.02;
+    letter-spacing: var(--tracking-display);
+  }
+  .studio-intro-body {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+    max-width: 62rem;
+    font-size: 1.0625rem;
+    line-height: 1.7;
+  }
+  .studio-intro-body em {
+    font-style: italic;
+    color: var(--color-concrete);
+  }
+
+  /* 2 · Fondatori */
+  .founders {
+    border-block: 1px solid var(--color-line);
+    background: var(--color-bone);
+  }
+  .founders .portrait {
+    background: var(--color-paper);
+  }
+  .founders-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(24px, 4vw, 40px);
+  }
+
+  /* 3 · Team */
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+
+  @media (max-width: 900px) {
+    .founders-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .team-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 560px) {
+    .studio-intro-body {
+      grid-template-columns: 1fr;
+    }
+    .founders-grid {
+      grid-template-columns: 1fr;
+      max-width: 320px;
+    }
+  }
+</style>

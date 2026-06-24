@@ -1,0 +1,365 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { ArrowRight, ArrowUpRight } from '@lucide/astro';
+
+/**
+ * /contatti — contatto diretto (sinistra) + form (destra).
+ * Dati reali Archisbang. Il form per ora è client-side (nessun backend):
+ * valida e mostra conferma. TODO: Astro Action + Resend → info@archisbang.com.
+ */
+const directs = [
+  { label: 'Chiamami', value: '+39 375 6506325', href: 'tel:+393756506325' },
+  { label: 'Scrivimi una email', value: 'info@archisbang.com', href: 'mailto:info@archisbang.com' },
+  { label: 'WhatsApp', value: 'Scrivici su WhatsApp', href: 'https://wa.me/393756506325' },
+];
+---
+
+<BaseLayout
+  title="Contatti — Archisbang"
+  description="Contatta Archisbang: Via Cremona 4, Torino · info@archisbang.com · +39 375 6506325. Raccontaci il tuo progetto."
+>
+  <section class="contatti section">
+    <div class="container-7xl">
+      <header class="contatti-head">
+        <span class="eyebrow">Contatti</span>
+        <h1 class="contatti-h1">Iniziamo un progetto</h1>
+        <p class="contatti-sub">
+          Raccontaci il tuo progetto: ti rispondiamo entro 48 ore.
+        </p>
+      </header>
+
+      <div class="contatti-grid">
+        <!-- Contatto diretto -->
+        <div class="direct">
+          <span class="block-label">Contatto diretto</span>
+
+          <ul class="direct-list">
+            {
+              directs.map((d) => (
+                <li>
+                  <a
+                    class="direct-row"
+                    href={d.href}
+                    target={d.href.startsWith('http') ? '_blank' : undefined}
+                    rel={d.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                  >
+                    <span class="direct-text">
+                      <span class="direct-label">{d.label}</span>
+                      <span class="direct-value">{d.value}</span>
+                    </span>
+                    <ArrowRight class="direct-arrow" size={18} strokeWidth={1.5} />
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+
+          <address class="direct-address">
+            <span>Via Cremona 4</span>
+            <span>10152 Torino · TO · IT</span>
+            <span class="direct-piva">P.IVA 12514370019</span>
+          </address>
+        </div>
+
+        <!-- Form -->
+        <form class="contact-form" id="contact-form" novalidate>
+          <span class="block-label">Invia un messaggio</span>
+
+          <div class="form-row">
+            <div class="field">
+              <label class="form-label" for="cf-nome">Nome e cognome</label>
+              <input class="input" id="cf-nome" name="nome" type="text" autocomplete="name" required />
+            </div>
+            <div class="field">
+              <label class="form-label" for="cf-tel">Telefono</label>
+              <input class="input" id="cf-tel" name="telefono" type="tel" autocomplete="tel" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="form-label" for="cf-email">Email</label>
+            <input class="input" id="cf-email" name="email" type="email" autocomplete="email" required />
+          </div>
+
+          <div class="field">
+            <label class="form-label" for="cf-msg">Il tuo progetto</label>
+            <textarea class="input input--area" id="cf-msg" name="messaggio" rows="6" required></textarea>
+          </div>
+
+          <label class="privacy">
+            <input type="checkbox" name="privacy" required />
+            <span>
+              Ho letto la <a href="/privacy">Privacy Policy</a> e acconsento al
+              trattamento dei dati per essere ricontattato.
+            </span>
+          </label>
+
+          <button type="submit" class="form-submit">
+            <span>Invia il messaggio</span>
+            <ArrowUpRight size={16} strokeWidth={1.75} />
+          </button>
+
+          <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .contatti {
+    padding-top: clamp(140px, 18vh, 200px);
+  }
+
+  .contatti-head {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    max-width: 52rem;
+    padding-bottom: clamp(2.5rem, 5vw, 4rem);
+    margin-bottom: clamp(2.5rem, 5vw, 4rem);
+    border-bottom: 1px solid var(--color-line);
+  }
+  .contatti-head .eyebrow {
+    margin-bottom: 4px;
+  }
+  .contatti-h1 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    line-height: 1.02;
+    letter-spacing: var(--tracking-display);
+    color: var(--color-ink);
+  }
+  .contatti-sub {
+    max-width: 46ch;
+    font-size: 1.0625rem;
+    color: var(--color-concrete);
+  }
+
+  .contatti-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: clamp(40px, 6vw, 88px);
+  }
+
+  .block-label {
+    display: block;
+    margin-bottom: 28px;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: var(--tracking-ui-emphasis);
+    text-transform: uppercase;
+    color: var(--color-concrete);
+  }
+
+  /* Contatto diretto */
+  .direct-list {
+    list-style: none;
+    margin: 0 0 40px;
+    padding: 0;
+    border-top: 1px solid var(--color-line);
+  }
+  .direct-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-block: 20px;
+    border-bottom: 1px solid var(--color-line);
+    transition: color var(--duration-fast) var(--ease-editorial);
+  }
+  .direct-text {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .direct-label {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: var(--tracking-ui-emphasis);
+    text-transform: uppercase;
+    color: var(--color-concrete);
+  }
+  .direct-value {
+    font-family: var(--font-text);
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: var(--color-ink);
+  }
+  .direct-arrow {
+    flex-shrink: 0;
+    color: var(--color-ink);
+    transition: transform var(--duration-fast) var(--ease-editorial),
+      color var(--duration-fast) var(--ease-editorial);
+  }
+  .direct-row:hover .direct-value {
+    color: var(--color-rebar);
+  }
+  .direct-row:hover .direct-arrow {
+    transform: translateX(6px);
+    color: var(--color-rebar);
+  }
+
+  .direct-address {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: var(--tracking-ui);
+    text-transform: uppercase;
+    font-style: normal;
+    color: var(--color-concrete);
+  }
+  .direct-piva {
+    margin-top: 6px;
+    color: color-mix(in srgb, var(--color-concrete) 70%, transparent);
+  }
+
+  /* Form */
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .form-label {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: var(--tracking-ui-emphasis);
+    text-transform: uppercase;
+    color: var(--color-concrete);
+  }
+  .input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-max);
+    background: var(--color-paper);
+    font-family: var(--font-text);
+    font-size: 1rem;
+    color: var(--color-ink);
+    transition: border-color var(--duration-fast) var(--ease-editorial);
+  }
+  .input:focus {
+    outline: none;
+    border-color: var(--color-ink);
+  }
+  .input--area {
+    resize: vertical;
+    min-height: 140px;
+  }
+
+  .privacy {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin: 8px 0 28px;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--color-concrete);
+  }
+  .privacy input {
+    margin-top: 3px;
+    width: 16px;
+    height: 16px;
+    accent-color: var(--color-ink);
+    flex-shrink: 0;
+  }
+  .privacy a {
+    color: var(--color-ink);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .privacy a:hover {
+    color: var(--color-rebar);
+  }
+
+  .form-submit {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 36px;
+    border: none;
+    border-radius: var(--radius-max);
+    background: var(--color-ink);
+    color: var(--color-paper);
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: var(--tracking-ui-emphasis);
+    text-transform: uppercase;
+    cursor: pointer;
+    transition:
+      letter-spacing var(--duration-base) var(--ease-editorial),
+      background var(--duration-base) var(--ease-editorial),
+      color var(--duration-base) var(--ease-editorial);
+  }
+  .form-submit:hover {
+    letter-spacing: var(--tracking-ui-hover);
+    background: var(--color-rebar);
+    color: var(--color-ink);
+  }
+  .form-submit:disabled {
+    opacity: 0.55;
+    cursor: default;
+  }
+
+  .form-status {
+    margin-top: 18px;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: var(--tracking-ui);
+    text-transform: uppercase;
+    color: var(--color-rebar);
+  }
+
+  @media (max-width: 900px) {
+    .contatti-grid {
+      grid-template-columns: 1fr;
+      gap: 56px;
+    }
+  }
+  @media (max-width: 520px) {
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  function setupContactForm() {
+    const form = document.getElementById('contact-form') as HTMLFormElement | null;
+    if (!form || form.dataset.bound) return;
+    form.dataset.bound = 'true';
+
+    const status = document.getElementById('form-status');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      const data = Object.fromEntries(new FormData(form).entries());
+      // TODO: invio reale via Astro Action + Resend → info@archisbang.com
+      console.log('[contatti] submit', data);
+
+      form
+        .querySelectorAll('input, textarea, button')
+        .forEach((el) => el.setAttribute('disabled', ''));
+      if (status) {
+        status.textContent = 'Grazie — messaggio ricevuto. Ti rispondiamo entro 48 ore.';
+      }
+    });
+  }
+
+  setupContactForm();
+  document.addEventListener('astro:page-load', setupContactForm);
+</script>

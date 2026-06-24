@@ -1,0 +1,205 @@
+---
+import ScanLine from '../ui/ScanLine.astro';
+
+/**
+ * Footer — 3 columns on ink. Scan-line decoration on top, legal bottom bar.
+ * Real contact data (Via Cremona 4) + correct tel link.
+ */
+const year = 2026;
+
+const socialLinks = [
+  { label: 'Instagram', href: 'https://www.instagram.com/archisbang/' },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/company/archisbang/' },
+  { label: 'Divisare', href: 'https://divisare.com/' },
+];
+---
+
+<footer class="footer" id="contatti">
+  <ScanLine />
+
+  <div class="container-7xl footer-inner">
+    <div class="footer-grid">
+      <!-- Brand / manifesto -->
+      <div class="footer-col footer-col--brand">
+        <span class="footer-brand">ARCHISBANG</span>
+        <p class="footer-manifesto">
+          Architettura come strumento di rigenerazione del territorio. Scuole,
+          riqualificazioni e spazi che generano comunità.
+        </p>
+      </div>
+
+      <!-- Contacts -->
+      <div class="footer-col">
+        <span class="footer-heading">Contatti</span>
+        <address class="footer-address">
+          <span>Via Cremona 4</span>
+          <span>10152 Torino</span>
+          <a href="mailto:info@archisbang.com" class="footer-link">info@archisbang.com</a>
+          <a href="tel:+393756506325" class="footer-link">+39 375 6506325</a>
+          <span class="footer-meta">P.IVA 12514370019</span>
+        </address>
+      </div>
+
+      <!-- Social -->
+      <nav class="footer-col" aria-label="Social">
+        <span class="footer-heading">Follow</span>
+        <ul class="footer-list">
+          {socialLinks.map((l) => (
+            <li>
+              <a href={l.href} class="footer-link" target="_blank" rel="noopener noreferrer">
+                {l.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </div>
+
+    <div class="footer-bottom">
+      <span class="footer-legal">© {year} Archisbang S.R.L.</span>
+      <span class="footer-legal footer-legal--links">
+        <a href="/privacy" class="footer-legal-link">Privacy</a>
+        <a href="/cookie" class="footer-legal-link">Cookie</a>
+        <span>Credits BD Media</span>
+      </span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    position: relative;
+    z-index: 1;
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+
+  .footer-inner {
+    padding-block: 96px 48px;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1fr;
+    gap: 48px;
+  }
+
+  .footer-col {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .footer-brand {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: var(--color-paper);
+  }
+
+  .footer-manifesto {
+    max-width: 38ch;
+    font-family: var(--font-text);
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: color-mix(in srgb, var(--color-paper) 70%, transparent);
+  }
+
+  .footer-heading {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: var(--tracking-ui-emphasis);
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-paper) 50%, transparent);
+  }
+
+  .footer-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .footer-address {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    font-style: normal;
+    font-family: var(--font-text);
+    font-size: 0.875rem;
+    color: var(--color-paper);
+  }
+
+  .footer-link {
+    font-family: var(--font-text);
+    font-size: 0.875rem;
+    color: var(--color-paper);
+    transition: color var(--duration-fast) var(--ease-editorial);
+  }
+  .footer-link:hover {
+    color: var(--color-rebar);
+  }
+
+  .footer-meta {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: var(--tracking-ui);
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-paper) 50%, transparent);
+  }
+
+  .footer-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid color-mix(in srgb, var(--color-paper) 10%, transparent);
+  }
+
+  .footer-legal {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: var(--tracking-ui);
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-paper) 60%, transparent);
+  }
+
+  .footer-legal--links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .footer-legal-link {
+    color: color-mix(in srgb, var(--color-paper) 60%, transparent);
+    transition: color var(--duration-fast) var(--ease-editorial);
+  }
+  .footer-legal-link:hover {
+    color: var(--color-rebar);
+  }
+
+  @media (max-width: 900px) {
+    .footer-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .footer-col--brand {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .footer-grid {
+      grid-template-columns: 1fr;
+    }
+    .footer-bottom {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>

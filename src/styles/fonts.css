@@ -1,0 +1,14 @@
+/* === Playfair Display — display serif (400/500/700 + italic) ===
+   Note: Playfair Display's lightest weight is 400 — there is no 300. */
+@import "@fontsource/playfair-display/400.css";
+@import "@fontsource/playfair-display/500.css";
+@import "@fontsource/playfair-display/700.css";
+@import "@fontsource/playfair-display/400-italic.css";
+
+/* === Space Grotesk — body text (variable 300–700) === */
+@import "@fontsource-variable/space-grotesk";
+
+/* === Space Mono — UI labels & metadata === */
+@import "@fontsource/space-mono/400.css";
+@import "@fontsource/space-mono/700.css";
+@import "@fontsource/space-mono/400-italic.css";

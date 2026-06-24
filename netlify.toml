@@ -1,0 +1,16 @@
+# Netlify deploy config — sito Astro statico (nessun adapter necessario)
+[build]
+  command = "pnpm build"
+  publish = "dist"
+
+[build.environment]
+  # Astro 7 richiede Node >= 22.12 (il default di Netlify è troppo vecchio)
+  NODE_VERSION = "22.12.0"
+  # Usa corepack per la versione di pnpm dichiarata in package.json (packageManager)
+  NETLIFY_USE_PNPM = "true"
+
+# Cache degli asset con hash (immutabili) generati da Astro
+[[headers]]
+  for = "/_astro/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

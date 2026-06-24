@@ -1,0 +1,11 @@
+---
+/**
+ * BackgroundGrid — fixed structural layer behind all content.
+ * 40px square grid with a soft radial mask (vertical dividers removed).
+ * Mounted in BaseLayout before <slot />; z-index 0, pointer-events none.
+ */
+---
+
+<div class="bg-grid" aria-hidden="true">
+  <div class="grid-pattern"></div>
+</div>

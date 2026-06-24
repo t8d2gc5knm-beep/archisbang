@@ -1,0 +1,17 @@
+---
+/**
+ * Button — primary animated CTA rendered as a link.
+ * Hover widens tracking (0.25em → 0.4em) and slides a white/20 overlay up.
+ */
+interface Props {
+  href: string;
+  label: string;
+}
+
+const { href, label } = Astro.props;
+---
+
+<a href={href} class="cta-primary">
+  <span class="cta-label">{label}</span>
+  <span class="cta-overlay" aria-hidden="true"></span>
+</a>

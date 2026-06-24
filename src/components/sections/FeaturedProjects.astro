@@ -1,0 +1,85 @@
+---
+import ProjectCard from '../ui/ProjectCard.astro';
+
+/**
+ * FeaturedProjects — asymmetric grid: full / half + half / full + CTA.
+ */
+const projects = [
+  {
+    index: '01',
+    eyebrow: 'Scolastica · 1° premio concorso',
+    title: 'Scuola Enrico Panzacchi',
+    meta: '2018–2021 · Ozzano (BO) · 2.900 mq',
+    href: '/progetti/scuola-enrico-panzacchi',
+    span: 'full' as const,
+    image: '/images/projects/panzacchi.jpg',
+    imageAlt: 'Scuola Enrico Panzacchi, Ozzano (BO)',
+  },
+  {
+    index: '02',
+    eyebrow: 'Riqualificazione',
+    title: 'Cavallerizza Reale',
+    meta: 'Torino · Recupero',
+    href: '/progetti/cavallerizza-reale',
+    span: 'half' as const,
+    image: '/images/projects/cavallerizza.jpg',
+    imageAlt: 'Cavallerizza Reale, Torino',
+  },
+  {
+    index: '03',
+    eyebrow: 'Residenziale',
+    title: 'Villa Il Generale',
+    meta: 'Collina torinese · Privato',
+    href: '/progetti/villa-il-generale',
+    span: 'half' as const,
+    image: '/images/projects/villa-generale.jpg',
+    imageAlt: 'Villa Il Generale, collina torinese',
+  },
+  {
+    index: '04',
+    eyebrow: 'Spazi aziendali',
+    title: 'Uffici Chemsafe',
+    meta: 'Torino · Workplace',
+    href: '/progetti/uffici-chemsafe',
+    span: 'full' as const,
+    image: '/images/projects/chemsafe.jpg',
+    imageAlt: 'Uffici Chemsafe, Torino',
+  },
+];
+---
+
+<section class="section projects-section" id="progetti" aria-labelledby="projects-title">
+  <div class="container-7xl">
+    <div class="section-head">
+      <span class="eyebrow">Progetti in evidenza</span>
+      <h2 class="h2" id="projects-title">Opere che raccontano il territorio</h2>
+    </div>
+
+    <div class="projects-grid">
+      {projects.map((p) => <ProjectCard {...p} />)}
+    </div>
+
+    <div class="projects-footer">
+      <a href="/progetti" class="cta-link-underline">Tutti i progetti →</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  .projects-footer {
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  @media (max-width: 760px) {
+    .projects-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+  }
+</style>

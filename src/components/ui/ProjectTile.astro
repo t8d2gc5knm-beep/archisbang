@@ -1,0 +1,101 @@
+---
+/**
+ * ProjectTile — uniform 4:3 listing tile (grayscale → colour on hover).
+ */
+interface Props {
+  href: string;
+  title: string;
+  eyebrow: string;
+  meta?: string;
+  image: string;
+  imageAlt?: string;
+}
+
+const { href, title, eyebrow, meta, image, imageAlt = '' } = Astro.props;
+---
+
+<article class="tile">
+  <a href={href} class="tile-link">
+    <div class="tile-media">
+      <img src={image} alt={imageAlt} loading="lazy" decoding="async" />
+    </div>
+    <div class="tile-overlay" aria-hidden="true"></div>
+    <div class="tile-content">
+      <span class="tile-eyebrow">{eyebrow}</span>
+      <h3 class="tile-title">{title}</h3>
+      {meta && <span class="tile-meta">{meta}</span>}
+    </div>
+  </a>
+</article>
+
+<style>
+  .tile {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-max);
+    background: var(--color-ink);
+  }
+  .tile-link {
+    position: absolute;
+    inset: 0;
+    display: block;
+  }
+  .tile-media {
+    position: absolute;
+    inset: 0;
+  }
+  .tile-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(100%) contrast(1.02);
+    transition:
+      transform var(--duration-slow) var(--ease-editorial),
+      filter var(--duration-slow) var(--ease-editorial);
+  }
+  .tile:hover .tile-media img {
+    transform: scale(1.05);
+    filter: grayscale(0%);
+  }
+  .tile-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 42%, rgba(10, 10, 10, 0.74) 100%);
+  }
+  .tile-content {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: clamp(18px, 2.4vw, 26px);
+  }
+  .tile-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: var(--tracking-ui-emphasis);
+    text-transform: uppercase;
+    color: var(--color-rebar);
+  }
+  .tile-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 2vw, 1.625rem);
+    font-weight: 400;
+    line-height: 1.1;
+    color: var(--color-paper);
+    transition: letter-spacing var(--duration-base) var(--ease-editorial);
+  }
+  .tile:hover .tile-title {
+    letter-spacing: 0.02em;
+  }
+  .tile-meta {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: var(--tracking-ui);
+    text-transform: uppercase;
+    color: rgba(245, 242, 236, 0.72);
+  }
+</style>

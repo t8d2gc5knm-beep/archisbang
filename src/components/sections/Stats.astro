@@ -1,0 +1,103 @@
+---
+import { PencilRuler, Award, CalendarDays } from '@lucide/astro';
+
+/**
+ * Stats — 3-cell bordered band. Real Archisbang figures.
+ */
+const stats = [
+  { Icon: PencilRuler, number: '13', label: 'Progetti realizzati' },
+  { Icon: Award, number: '01', label: 'Primo premio · Scuola Panzacchi 2018' },
+  { Icon: CalendarDays, number: '2008', label: 'Anno di fondazione' },
+];
+---
+
+<section class="section stats-section" aria-label="Numeri dello studio">
+  <div class="container-7xl">
+    <div class="stats-grid">
+      {
+        stats.map(({ Icon, number, label }) => (
+          <div class="stat-cell">
+            <span class="stat-icon">
+              <Icon size={22} strokeWidth={1.5} />
+            </span>
+            <span class="stat-number">{number}</span>
+            <span class="stat-label">{label}</span>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .stat-cell {
+    display: flex;
+    flex-direction: column;
+    padding: clamp(28px, 4vw, 44px);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-max);
+    background: var(--color-paper);
+    transition:
+      background var(--duration-base) var(--ease-editorial),
+      border-color var(--duration-base) var(--ease-editorial),
+      transform var(--duration-base) var(--ease-editorial);
+  }
+  .stat-cell:hover {
+    background: var(--color-bone);
+    border-color: var(--color-ink);
+    transform: translateY(-4px);
+  }
+
+  .stat-icon {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 32px;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-max);
+    color: var(--color-ink);
+    transition:
+      color var(--duration-base) var(--ease-editorial),
+      border-color var(--duration-base) var(--ease-editorial);
+  }
+  .stat-cell:hover .stat-icon {
+    color: var(--color-rebar);
+    border-color: var(--color-rebar);
+  }
+
+  .stat-number {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 4vw, 3.5rem);
+    font-weight: 400;
+    line-height: 1;
+    color: var(--color-ink);
+  }
+
+  .stat-label {
+    margin-top: 14px;
+    max-width: 22ch;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: var(--tracking-ui-emphasis);
+    text-transform: uppercase;
+    line-height: 1.6;
+    color: var(--color-concrete);
+  }
+
+  @media (max-width: 760px) {
+    .stats-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    .stat-icon {
+      margin-bottom: 20px;
+    }
+  }
+</style>
