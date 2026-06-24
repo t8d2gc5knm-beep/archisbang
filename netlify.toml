@@ -6,8 +6,10 @@
 [build.environment]
   # Astro 7 richiede Node >= 22.12 (il default di Netlify è troppo vecchio)
   NODE_VERSION = "22.12.0"
-  # Usa corepack per la versione di pnpm dichiarata in package.json (packageManager)
-  NETLIFY_USE_PNPM = "true"
+  # Fix corepack "Cannot find matching keyid": le chiavi di firma incluse in
+  # corepack su Netlify sono troppo vecchie per verificare pnpm 11 → disabilita
+  # il controllo firma così corepack può installare pnpm.
+  COREPACK_INTEGRITY_KEYS = "0"
 
 # Cache degli asset con hash (immutabili) generati da Astro
 [[headers]]
