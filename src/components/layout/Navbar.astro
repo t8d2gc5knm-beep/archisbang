@@ -77,18 +77,25 @@ const navItems = [
   <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
     <nav class="mobile-menu-links" aria-label="Navigazione mobile">
       {
-        navItems.map((item) => (
-          <div class="mobile-group">
-            <a href={item.href} class="mobile-menu-link">{item.label}</a>
-            {item.children && (
+        navItems.map((item) =>
+          item.children ? (
+            <div class="mobile-group">
+              <button type="button" class="mobile-menu-link mobile-menu-acc" aria-expanded="false">
+                {item.label}
+                <span class="mobile-caret" aria-hidden="true">↓</span>
+              </button>
               <div class="mobile-sublinks">
                 {item.children.map((c) => (
                   <a href={c.href} class="mobile-sublink">{c.label}</a>
                 ))}
               </div>
-            )}
-          </div>
-        ))
+            </div>
+          ) : (
+            <div class="mobile-group">
+              <a href={item.href} class="mobile-menu-link">{item.label}</a>
+            </div>
+          )
+        )
       }
     </nav>
   </div>
@@ -119,10 +126,22 @@ const navItems = [
   }
 
   .navbar-inner {
+    position: relative;
+    z-index: 41; /* stays above the mobile overlay (z-40) so the X is clickable */
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 24px;
+  }
+
+  /* Over the open overlay, keep the brand + bars visible (white on teal) */
+  .navbar.menu-open .brand-name,
+  .navbar.menu-open .brand-bar {
+    color: var(--color-paper);
+    background: var(--color-paper);
+  }
+  .navbar.menu-open .brand-name {
+    background: none;
   }
 
   /* Brand */
@@ -333,11 +352,42 @@ const navItems = [
   .mobile-menu-link:hover {
     color: var(--color-rebar);
   }
+  /* Accordion parent (button) */
+  .mobile-menu-acc {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+  }
+  .mobile-caret {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    transition: transform var(--duration-fast) var(--ease-editorial);
+  }
+  .mobile-menu-acc[aria-expanded='true'] .mobile-caret {
+    transform: rotate(180deg);
+  }
+  /* Sotto-voci: chiuse di default, si aprono al tap */
   .mobile-sublinks {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    padding-top: 4px;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition:
+      max-height var(--duration-base) var(--ease-editorial),
+      opacity var(--duration-base) var(--ease-editorial),
+      padding-top var(--duration-base) var(--ease-editorial);
+  }
+  .mobile-sublinks.is-open {
+    max-height: 260px;
+    opacity: 1;
+    padding-top: 14px;
   }
   .mobile-sublink {
     font-family: var(--font-mono);
@@ -399,16 +449,33 @@ const navItems = [
 
     navbar.dataset.scrolled = window.scrollY > 8 ? 'true' : 'false';
 
+    const collapseAccordions = () => {
+      menu.querySelectorAll('.mobile-menu-acc').forEach((b) => {
+        b.setAttribute('aria-expanded', 'false');
+        b.nextElementSibling?.classList.remove('is-open');
+      });
+    };
+
     const setOpen = (open: boolean) => {
       navbar.classList.toggle('menu-open', open);
       toggle.setAttribute('aria-expanded', String(open));
       toggle.setAttribute('aria-label', open ? 'Chiudi il menu' : 'Apri il menu');
       menu.setAttribute('aria-hidden', String(!open));
       document.body.style.overflow = open ? 'hidden' : '';
+      if (!open) collapseAccordions(); // reopen always starts collapsed
     };
 
     toggle.addEventListener('click', () => {
       setOpen(!navbar.classList.contains('menu-open'));
+    });
+
+    // Accordion: tap a parent voice to expand/collapse its sub-links.
+    menu.querySelectorAll('.mobile-menu-acc').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const open = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', String(!open));
+        btn.nextElementSibling?.classList.toggle('is-open', !open);
+      });
     });
 
     menu.querySelectorAll('a').forEach((link) => {
